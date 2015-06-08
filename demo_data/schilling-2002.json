@@ -1,0 +1,27 @@
+{
+  "slug": "schilling-2002",
+  "citation": "Schilling, M.F., Watkins, A.E. &amp; Watkins, W., 2002. Is Human Height Bimodal? <i>American Statistician</i>, 56(3), pp.223–229.",
+  "year": "2002",
+  "url": "http://faculty.washington.edu/tamre/IsHumanHeightBimodal.pdf",
+  "doi": "10.1198/00031300265",
+  "description": "Some information about the study.",
+  "abstract": "The combined distribution of heights of men and women has become the canonical illustration of bimodality when teaching introductory statistics. But is this example appropriate? This article investigates the conditions under which a mixture of two normal distributions is bimodal. A simple justifcation is presented that a mixture of equally weighted normal distributions with common standard deviation 1/4 is bimodal if and only if the difference between the means of the distributionsis greater than 2 1/4. More generally, a mixture of two normal distributionswith similar variability cannot be bimodal unless their means differ bymore than approximately the sum of their standard deviations. Examination of national survey data on young adults shows that the separation between the distributions of men’s and women’s heights is not wide enough to produce bimodality.We suggest reasons why histograms of height nevertheless often appear bimodal.",
+  "genre": "bio",
+  "social-sig": "no",
+  "added": "2015-06-07T14:00:00.000Z",
+  "units": "Inches",
+  "group": [
+    {
+      "name": "Males",
+      "size": "18243",
+      "mean": "69.3",
+      "stddiv": "2.92"
+    },
+    {
+      "name": "Females",
+      "size": "18019",
+      "mean": "64.1",
+      "stddiv": "2.75"
+    }
+  ]
+}
