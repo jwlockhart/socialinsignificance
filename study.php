@@ -31,9 +31,27 @@
 
 <body>
 
+
+<?php
+$slug = htmlspecialchars($_GET["id"]);
+$data_file = "./demo_data/" . $slug . ".json";
+$tmp = file_get_contents($data_file);
+$data = json_decode($tmp, true);
+
+echo "The data on this page is from the following study:<br/><a href=\"" . $data['url'] . "\" target=\"_blank\">" . $data['citation'] . "</a> doi: " . $data['doi'] . '.<br/>';
+echo "<b>Abstract:</b><br/>" . $data['abstract'];
+
+echo "<br/><br/>";
+
+?>
+
+
 </body>
 
 <script type="text/javascript">
+
+
+
 var data1 = getGausData(mean = -1, sigma = 1); // popuate data 
 var data2 = getGausData(mean = 0, sigma = 2); // popuate data 
 
