@@ -7,28 +7,20 @@
     <title>Normal Plot</title>
     <meta name="description" content="">
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script src="./js/math.js" charset="utf-8"></script>
+    <script src="http://storm.cis.fordham.edu/~lockhart/test/socialinsignificance/js/math.js" charset="utf-8"></script>
     <script src="./js/helpers.js" charset="utf-8"></script>
     <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
     
     <style type="text/css">
-    body {
-        font: 10px sans-serif;
-    }
-    .axis path,
-    .axis line {
-        fill: none;
-        stroke: #000;
-        shape-rendering: crispEdges;
-    }
-    /*.x.axis path {
-        display: none;
-    }*/
-    .line {
-        fill: none;
-        stroke: steelblue;
-        stroke-width: 1.5px;
-    }
+        .axis path {
+            fill: none;
+            stroke: #777;
+            shape-rendering: crispEdges;
+        }
+        .axis text {
+            font-family: Lato;
+            font-size: 13px;
+        }
     </style>
 </head>
 
@@ -48,7 +40,12 @@ echo "<br/><br/>";
 
 ?> -->
 
-<div id="study_info">Loading study data...</br></div>
+<div id="study_info">Loading study meta data...</br></div>
+
+<br/><b>Debug Data:</b><br>
+<div id="debug"></br></div>
+
+<svg id="visualisation" width="1000" height="500"></svg>
 
 </body>
 
@@ -60,9 +57,79 @@ file_path += slug;
 file_path += ".json";
 
 
-  $.getJSON(file_path, function(data) {
+//load the json data
+$.getJSON(file_path, gen_page);
+
+//generate the page content based on the json data
+function gen_page(data){
+  pop_meta_data(data);
+  make_two_gaussians(data);
+};
+
+//function for making basic chart of two gaussians
+function make_two_gaussians(data){
+
+  //populate data
+  
+  var x_vals = get_x_vals(data.group[0].mean, data.group[0].stddiv, data.group[1].mean, data.group[1].stddiv);
+  
+  dbg = 'x0 is ' + x_vals[0];
+  document.getElementById("debug").innerHTML=dbg;
+  
+  var data0 = get_gaus_data(mean = data.group[0].mean, stddiv = data.group[0].stddiv, x_vals);
+  var data1 = get_gaus_data(mean = data.group[1].mean, stddiv = data.group[1].stddiv, x_vals);
+      
+  //for (var i in data.group) { data.group[i].firstName; }
+  
+  var vis = d3.select("#visualisation"),
+      WIDTH = 600,
+      HEIGHT = 400,
+      MARGINS = {
+	  top: 20,
+	  right: 20,
+	  bottom: 20,
+	  left: 50
+      },
+      xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([x_vals[0], x_vals[x_vals.length-1]]),
+      yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0,0.3]),
+      xAxis = d3.svg.axis()
+      .scale(xScale),
+      yAxis = d3.svg.axis()
+      .scale(yScale)
+      .orient("left");
+  
+  vis.append("svg:g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
+      .call(xAxis);
+  vis.append("svg:g")
+      .attr("class", "y axis")
+      .attr("transform", "translate(" + (MARGINS.left) + ",0)")
+      .call(yAxis);
+  var lineGen = d3.svg.line()
+      .x(function(d) {
+	  return xScale(d.x);
+      })
+      .y(function(d) {
+	  return yScale(d.y);
+      })
+      .interpolate("basis");
+  vis.append('svg:path')
+      .attr('d', lineGen(data0))
+      .attr('stroke', 'green')
+      .attr('stroke-width', 2)
+      .attr('fill', 'none');
+  vis.append('svg:path')
+      .attr('d', lineGen(data1))
+      .attr('stroke', 'blue')
+      .attr('stroke-width', 2)
+      .attr('fill', 'none');
+
+};
+
+function pop_meta_data(data){
         var output="";
-        output = "The data on this page is from the following study:<br/><a href=\"";
+        output = "<b>The data on this page is from the following study:</b><br/><a href=\"";
         output += data.url;
         output += "\" target=\"_blank\">";
         output += data.citation;
@@ -73,79 +140,7 @@ file_path += ".json";
         output += data.abstract;
         output += "<br/>";
         document.getElementById("study_info").innerHTML=output;
-        
-        //for (var i in data.group) {
-       //     output+="<li>" + data.users[i].firstName + " " + data.users[i].lastName + "--" + data.users[i].joined.month+"</li>";
-      //  }
-        
-  });
-
-var data1 = getGausData(mean = -1, sigma = 1); // popuate data 
-var data2 = getGausData(mean = 0, sigma = 2); // popuate data 
-
-// line chart based on http://bl.ocks.org/mbostock/3883245
-var margin = {
-        top: 20,
-        right: 20,
-        bottom: 30,
-        left: 50
-    },
-    width = 600 - margin.left - margin.right,
-    height = 300 - margin.top - margin.bottom;
-
-var x = d3.scale.linear()
-    .range([0, width]);
-
-var y = d3.scale.linear()
-    .range([height, 0]);
-
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
-
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left");
-
-var line = d3.svg.line()
-    .x(function(d) {
-        return x(d.q);
-    })
-    .y(function(d) {
-        return y(d.p);
-    });
-
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-x.domain(d3.extent(data1, function(d) {
-    return d.q;
-}));
-y.domain(d3.extent(data1, function(d) {
-    return d.p;
-}));
-
-svg.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(0," + height + ")")
-    .call(xAxis);
-
-svg.append("g")
-    .attr("class", "y axis")
-    .call(yAxis);
-
-svg.append("path")
-    .datum(data1)
-    .attr("class", "line")
-    .attr("d", line);
-    
-svg.append("path")
-    .datum(data2)
-    .attr("class", "line")
-    .attr("d", line);
+};
 
 </script>
 
