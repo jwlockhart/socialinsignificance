@@ -8,6 +8,9 @@
     <meta name="description" content="">
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="./js/math.js" charset="utf-8"></script>
+    <script src="./js/helpers.js" charset="utf-8"></script>
+    <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    
     <style type="text/css">
     body {
         font: 10px sans-serif;
@@ -32,25 +35,50 @@
 <body>
 
 
-<?php
+<!--php
 $slug = htmlspecialchars($_GET["id"]);
 $data_file = "./demo_data/" . $slug . ".json";
 $tmp = file_get_contents($data_file);
 $data = json_decode($tmp, true);
 
 echo "The data on this page is from the following study:<br/><a href=\"" . $data['url'] . "\" target=\"_blank\">" . $data['citation'] . "</a> doi: " . $data['doi'] . '.<br/>';
-echo "<b>Abstract:</b><br/>" . $data['abstract'];
+echo "<b>Abstract:</b><br/>" . $data['abstract'] . "<br/>";
 
 echo "<br/><br/>";
 
-?>
+?> -->
 
+<div id="study_info">Loading study data...</br></div>
 
 </body>
 
 <script type="text/javascript">
 
+var slug = getParameterByName('id');
+var file_path = "./demo_data/"
+file_path += slug;
+file_path += ".json";
 
+
+  $.getJSON(file_path, function(data) {
+        var output="";
+        output = "The data on this page is from the following study:<br/><a href=\"";
+        output += data.url;
+        output += "\" target=\"_blank\">";
+        output += data.citation;
+        output += "</a> doi: ";
+        output += data.doi;
+        output += ".<br/>";
+        output += "<b>Abstract:</b><br/>";
+        output += data.abstract;
+        output += "<br/>";
+        document.getElementById("study_info").innerHTML=output;
+        
+        //for (var i in data.group) {
+       //     output+="<li>" + data.users[i].firstName + " " + data.users[i].lastName + "--" + data.users[i].joined.month+"</li>";
+      //  }
+        
+  });
 
 var data1 = getGausData(mean = -1, sigma = 1); // popuate data 
 var data2 = getGausData(mean = 0, sigma = 2); // popuate data 
