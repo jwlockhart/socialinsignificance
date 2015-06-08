@@ -3,8 +3,5 @@
 *.swp
 
 # data files
-*.json
-*.xml
+data
 
-# include example data files
-!demo_data
