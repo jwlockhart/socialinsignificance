@@ -7,7 +7,7 @@
     <title>Normal Plot</title>
     <meta name="description" content="">
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script src="http://storm.cis.fordham.edu/~lockhart/test/socialinsignificance/js/math.js" charset="utf-8"></script>
+    <script src="./js/math.js" charset="utf-8"></script>
     <script src="./js/helpers.js" charset="utf-8"></script>
     <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
     
