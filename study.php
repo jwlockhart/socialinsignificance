@@ -73,13 +73,17 @@ function make_two_gaussians(data){
   
   var x_vals = get_x_vals(data.group[0].mean, data.group[0].stddiv, data.group[1].mean, data.group[1].stddiv);
   
-  dbg = 'x0 is ' + x_vals[0];
-  document.getElementById("debug").innerHTML=dbg;
   
-  var data0 = get_gaus_data(mean = data.group[0].mean, stddiv = data.group[0].stddiv, x_vals);
-  var data1 = get_gaus_data(mean = data.group[1].mean, stddiv = data.group[1].stddiv, x_vals);
+  //var data0 = get_gaus_data(mean = data.group[0].mean, stddiv = data.group[0].stddiv, x_vals);
+  //var data1 = get_gaus_data(mean = data.group[1].mean, stddiv = data.group[1].stddiv, x_vals);
       
   //for (var i in data.group) { data.group[i].firstName; }
+  
+  var d = gen_data(data);
+  
+  dbg = 'data g name 0 is ' + d.length; //d[0][data.group[0].name].x;
+  document.getElementById("debug").innerHTML=dbg;
+  
   
   var vis = d3.select("#visualisation"),
       WIDTH = 600,
@@ -114,6 +118,26 @@ function make_two_gaussians(data){
 	  return yScale(d.y);
       })
       .interpolate("basis");
+      
+  var line_gen = d3.svg.line()
+      .x(function(d, name) {
+	  return xScale(d['x']);
+      })
+      .y(function(d, name) {
+	  return yScale(d[name]);
+      })
+      .interpolate("basis");
+
+  for (var i = 0; i < data.group.length; i++){
+    vis.append('svg:path')
+      .attr('d', line_gen(d, data.group[i]))
+      .attr('stroke', 'green')
+      .attr('stroke-width', 2)
+      .attr('fill', 'none');
+  
+  }
+      
+  /**    
   vis.append('svg:path')
       .attr('d', lineGen(data0))
       .attr('stroke', 'green')
@@ -124,6 +148,7 @@ function make_two_gaussians(data){
       .attr('stroke', 'blue')
       .attr('stroke-width', 2)
       .attr('fill', 'none');
+    */
 
 };
 
