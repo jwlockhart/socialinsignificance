@@ -42,9 +42,6 @@ echo "<br/><br/>";
 
 <div id="study_info">Loading study meta data...</br></div>
 
-<br/><b>Debug Data:</b><br>
-<div id="debug"></br></div>
-
 <svg id="visualisation" width="1000" height="500"></svg>
 
 </body>
@@ -69,22 +66,17 @@ function gen_page(data){
 //function for making basic chart of two gaussians
 function make_two_gaussians(data){
 
-  //populate data
+  colour = [
+      'blue',
+      'green',
+      'red'
+    ]
+
+  //populate data  
+  var x_vals = get_x(data);
+  var d = gen_data(data, x_vals);
   
-  var x_vals = get_x_vals(data.group[0].mean, data.group[0].stddiv, data.group[1].mean, data.group[1].stddiv);
-  
-  
-  //var data0 = get_gaus_data(mean = data.group[0].mean, stddiv = data.group[0].stddiv, x_vals);
-  //var data1 = get_gaus_data(mean = data.group[1].mean, stddiv = data.group[1].stddiv, x_vals);
-      
-  //for (var i in data.group) { data.group[i].firstName; }
-  
-  var d = gen_data(data);
-  
-  dbg = 'data g name 0 is ' + d.length; //d[0][data.group[0].name].x;
-  document.getElementById("debug").innerHTML=dbg;
-  
-  
+
   var vis = d3.select("#visualisation"),
       WIDTH = 600,
       HEIGHT = 400,
@@ -119,36 +111,13 @@ function make_two_gaussians(data){
       })
       .interpolate("basis");
       
-  var line_gen = d3.svg.line()
-      .x(function(d, name) {
-	  return xScale(d['x']);
-      })
-      .y(function(d, name) {
-	  return yScale(d[name]);
-      })
-      .interpolate("basis");
-
   for (var i = 0; i < data.group.length; i++){
     vis.append('svg:path')
-      .attr('d', line_gen(d, data.group[i]))
-      .attr('stroke', 'green')
+      .attr('d', lineGen(d[data.group[i].name]))
+      .attr('stroke', colour[i])
       .attr('stroke-width', 2)
       .attr('fill', 'none');
-  
   }
-      
-  /**    
-  vis.append('svg:path')
-      .attr('d', lineGen(data0))
-      .attr('stroke', 'green')
-      .attr('stroke-width', 2)
-      .attr('fill', 'none');
-  vis.append('svg:path')
-      .attr('d', lineGen(data1))
-      .attr('stroke', 'blue')
-      .attr('stroke-width', 2)
-      .attr('fill', 'none');
-    */
 
 };
 

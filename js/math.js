@@ -6,26 +6,13 @@
  * given the json descriptions for each group's distribution
  * generates data for plotting the probability density functions (bell curves)
  */
-function gen_data(json){
-  var data = [];
-  var x = [];
+function gen_data(json, x){
+  var data = {};
   
-  x = get_x(json);
-    
-  //loop through all x values
-  for (var i = 0; i < x.length; i++){
-    var point = {
-      'x': x[i]
-    }
-    
-    //loop through all groups / y values
-    for (var j = 0; j < json.group.length; j++){
-      //calculate and store the y value for this group and x value
-      point[json.group[j].name] = pdf(x[i], json.group[j].mean, json.group[j].stddiv);      
-    }
-    
-    data.push(point);
-  } 
+  //create a variable for each group, generate and save it's data
+  for (var i = 0; i < json.group.length; i++){
+    data[json.group[i].name] = get_gaus_data(json.group[i].mean, json.group[i].stddiv, x);
+  }
   
   return data;
 }
